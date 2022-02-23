@@ -14,8 +14,18 @@ export default function Auth({ isSigningUp = false }) {
     try {
       // TODO: Implement sign up & sign
       // Use isSigningUp to determine whether to sign up or sign in a user
-      // If signing in: set the user ({id, email}) and redirect to /notes
-      // If signing up: redirect to /confirm-email
+      if (isSigningUp) {
+        // If signing in: set the user ({id, email}) and redirect to /notes
+        await signUpUser(email, password);
+        history.push('/confirm-email');
+        // If signing up: redirect to /confirm-email
+      } else {
+        const resp = await signInUser(email, password);
+        // Set user in context
+        setUser({ id: resp.id, email: resp.email });
+        // Redirect
+        history.replace('/notes');
+      }
       // Use the corresponding functions from `/services/users` for both cases
     } catch (error) {
       throw error;
